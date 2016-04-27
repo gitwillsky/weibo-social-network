@@ -1,0 +1,85 @@
+@charset "UTF-8";
+@import "color";
+.box {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    overflow: hidden;
+    background-color: #fff;
+    width: 22%;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+    .avatar {
+        flex: 0 1 30%;
+        width: 100%;
+        background-image: url('../../images/material_avatar.png');
+        background-repeat: no-repeat;
+        background-size: 100% 200px;
+        padding: 20px 0 0 20px;
+        img {
+            display: block;
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+        }
+        h3 {
+            padding: 20px 0 10px;
+            color: #fff;
+        }
+        p {
+            font-size: 0.8rem;
+            color: #fff;
+            a {
+                color: #fff;
+                text-decoration: none;
+            }
+        }
+    }
+    .menuBox {
+        flex: 0 1 60%;
+        padding: 10px 0;
+        ul {
+            li {
+                display: flex;
+                cursor: pointer;
+                padding: 20px;
+                font-size: 1.4rem;
+                .menuTitle {
+                    padding: 0 40px;
+                }
+                .number {
+                    align-self: flex-start;
+                    background-color: $color_sec;
+                    color: #fff;
+                    border-radius: 2px;
+                    padding: 4px;
+                    font-size: 0.8rem;
+                }
+                &:hover {
+                    color: $color_sec;
+                }
+            }
+        }
+    }
+    .footer {
+        flex: 0 1 6%;
+        width: 100%;
+        background-color: rgba(0,0,0,.02);
+        border-top: 2px solid rgba(0,0,0,.05);
+        font-size: 0.8rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .help {
+            span {
+                padding: 0 0.7rem;
+            }
+            &:hover {
+                cursor: pointer;
+                color: $color_sec;
+            }
+        }
+    }
+}
