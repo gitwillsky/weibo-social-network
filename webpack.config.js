@@ -8,7 +8,7 @@ var config = {
     modulesDirectories: ['node_modules', 'bower_components']
   },
   entry: [
-    'webpack-dev-server/client?http://192.168.199.143:8080', // WebpackDevServer host and port
+    'webpack-dev-server/client?http://127.0.0.1:8080', // WebpackDevServer host and port
     'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
     path.resolve(__dirname, 'src/js/entry.js')
   ],
@@ -28,7 +28,7 @@ var config = {
     }, {
       test: /\.(css|scss)$/,
       loaders: ['style', 'css?modules&localIdentName=[name]-[local]-[hash:base64:5]',
-      'autoprefixer?{browsers:["> 5%", "ie 9"]}', 'sass?outputStyle=compressed']
+      'postcss?{browsers:["> 5%", "ie 9"]}', 'sass?outputStyle=compressed']
     }]
   },
   plugins: [
