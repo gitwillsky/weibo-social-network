@@ -2,6 +2,7 @@ import {
     WEIBO_SERVER,
     APPKEY
 } from './const';
+import {notify} from 'react-notify-toast';
 
 export const REQUEST_USER = 'REQUEST_USER';
 export function requestUser() {
@@ -30,6 +31,6 @@ export function getUserFromServer(accessToken,uid) {
             })
             .then(response => response.json())
             .then(json => dispatch(receiveUser(json)))
-            .catch(e => alert('请求用户信息遇到错误'))
+            .catch(e => {notify.show('请求用户信息遇到错误');console.log(e);})
     }
 }

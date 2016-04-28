@@ -1,5 +1,5 @@
 import {API_SERVER} from './const';
-
+import {notify} from 'react-notify-toast';
 
 export const REQUEST_TOKEN = 'REQUEST_TOKEN';
 export function requestToken() {
@@ -24,6 +24,6 @@ export function getTokenFromServer() {
     return fetch(API_SERVER+'/token', {credentials:'same-origin'})
       .then(response => response.json())
       .then(json => dispatch(receiveToken(json)))
-      .catch(e => alert('发起请求失败'+ e))
+      .catch(e => notify.show('发起请求失败'))
   }
 }

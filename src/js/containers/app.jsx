@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {getTokenFromServer} from '../actions/token';
 import Login from '../components/login';
 import Main from '../components/main';
+import Notifications from 'react-notify-toast';
 
 class App extends Component {
     componentDidMount() {
@@ -14,6 +15,7 @@ class App extends Component {
         const {token} = this.props;
         return (
           <div>
+            <Notifications />
             {token.valid &&
               <Main />
             }
