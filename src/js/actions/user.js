@@ -1,7 +1,4 @@
-import {
-    WEIBO_SERVER,
-    APPKEY
-} from './const';
+import {API_SERVER} from './const';
 import {notify} from 'react-notify-toast';
 
 export const REQUEST_USER = 'REQUEST_USER';
@@ -20,17 +17,13 @@ export function receiveUser(json) {
     }
 }
 
-export function getUserFromServer(accessToken,uid) {
+export function getUser() {
     return dispatch => {
         dispatch(requestUser())
             // use credentials for send cookie.
-        return fetch(WEIBO_SERVER +
-                      '/users/show.json?access_token='
-                      + accessToken + "&uid=" + uid + "&source=" + APPKEY, {
-                mode: 'no-cors'
-            })
+        return fetch(API_SERVER + '/user',{credentials:'same-origin'})
             .then(response => response.json())
             .then(json => dispatch(receiveUser(json)))
-            .catch(e => {notify.show('请求用户信息遇到错误');console.log(e);})
+            .catch(e => notify.show('请求用户信息遇到错误'))
     }
 }

@@ -1,7 +1,8 @@
-import {RECEIVE_USER, REQUEST_USER} from '../actions/basic';
+import {RECEIVE_USER, REQUEST_USER} from '../actions/user';
 
 export function user(state = {
-  isFetching: false
+  isFetching: false,
+  id: 0
 },action) {
   switch(action.type) {
     case RECEIVE_USER:

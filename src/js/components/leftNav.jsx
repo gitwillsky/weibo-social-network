@@ -1,29 +1,30 @@
 import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
 import Styles from './leftNav.scss';
 import FontAwesome from 'react-fontawesome';
+import {selectContent} from '../actions/content';
 
-export default class LeftNav extends Component {
+class LeftNav extends Component {
     render() {
+        const {user,dispatch} = this.props;
         return (
             <div className={Styles['box']}>
                 <div className={Styles['avatar']}>
-                    <img src={this.props.imgSrc}/>
-                    <h3>{this.props.name}</h3>
-                    <p>微博：<a href={this.props.weiboUrl} target="_blank">{this.props.weibo}</a>
-                    </p>
+                    <img src={user.avatar_large}/>
+                    <h3>{user.name}</h3>
+                    <p>{user.location}</p>
                 </div>
                 <div className={Styles['menuBox']}>
                     <ul>
-                        <li><FontAwesome name="weibo"/>
-                            <span className={Styles['menuTitle']}>我的微博</span>
-                        </li>
                         <li><FontAwesome name="users"/>
-                            <span className={Styles['menuTitle']}>我的粉丝</span>
-                            <span className={Styles['number']}>300</span>
+                            <span className={Styles['menuTitle']}
+                              onClick={() => dispatch(selectContent(1))}>我的粉丝</span>
+                            <span className={Styles['number']}>{user.followers_count}</span>
                         </li>
                         <li><FontAwesome name="heart-o"/>
-                            <span className={Styles['menuTitle']}>我的关注</span>
-                            <span className={Styles['number']}>100</span>
+                            <span className={Styles['menuTitle']}
+                                onClick={() => dispatch(selectContent(2))}>我的关注</span>
+                            <span className={Styles['number']}>{user.friends_count}</span>
                         </li>
                     </ul>
                 </div>
@@ -37,3 +38,5 @@ export default class LeftNav extends Component {
         );
     }
 }
+
+export default connect()(LeftNav);

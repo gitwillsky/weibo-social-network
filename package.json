@@ -8,7 +8,7 @@
     "layout"
   ],
   "scripts": {
-    "build": "webpack -p & sass -C --style compressed src/scss/style.scss:assets/style.css",
+    "build": "webpack -p",
     "deploy": "NODE_ENV=production webpack -p --config webpack.propconfig.js",
     "start": "node server.js & sass -C --style compressed --watch src/scss/style.scss:assets/style.css"
   },

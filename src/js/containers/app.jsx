@@ -1,26 +1,32 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import {getTokenFromServer} from '../actions/token';
+import {getUser} from '../actions/user';
 import Login from '../components/login';
-import Main from '../components/main';
+import Header from '../components/header';
+import LeftNav from '../components/leftNav';
 import Notifications from 'react-notify-toast';
+import Content from './content';
 
 class App extends Component {
     componentDidMount() {
         const {dispatch} = this.props;
-        dispatch(getTokenFromServer());
+        dispatch(getUser());
     }
 
     render() {
-        const {token} = this.props;
+        const {user,content} = this.props;
         return (
           <div>
             <Notifications />
-            {token.valid &&
-              <Main />
+            {user.id > 0 &&
+              <div>
+                <Header/>
+                <LeftNav user={user}/>
+                <Content id={content.id}/>
+              </div>
             }
-            {!token.valid && !token.isFetching &&
-              <Login location="http://w.fullstackdev.cn/login"/>
+            {user.id == 0 && !user.isFetching &&
+              <Login location="http://w.fullstackdev.cn/api/login"/>
             }
           </div>
       );
@@ -28,12 +34,12 @@ class App extends Component {
 }
 
 App.propTypes = {
-    token: PropTypes.object.isRequired
+    user: PropTypes.object.isRequired
 }
 
 function mapStateToProps(state) {
-    const {token} = state;
-    return {token}
+    const {user, content} = state;
+    return {user, content}
 }
 
 export default connect(mapStateToProps)(App);

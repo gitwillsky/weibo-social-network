@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
-import {token} from './token';
-import {user} from './basic';
+import {user} from './user';
+import {content} from './content';
 
 const rootReducer = combineReducers({
-  token,
+  content,
   user
 });
 

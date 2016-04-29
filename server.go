@@ -2,12 +2,19 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
-	"time"
+	"strconv"
+	"strings"
 
 	"github.com/gitwillsky/slimgo/context"
 	"github.com/gitwillsky/slimgo/router"
 	"github.com/gitwillsky/weibo/auth"
+)
+
+const (
+	// WEIBOSERVER weibo server address
+	WEIBOSERVER = "https://api.weibo.com/2"
 )
 
 // Login user login
@@ -20,29 +27,64 @@ func Login(c *context.Context) {
 
 // GetToken get weibo token.
 func GetToken(c *context.Context) {
-	accessTokenData, err := auth.GetCurrentTokenData(c)
-	if err != nil || time.Now().After(accessTokenData.CreatedAt.
-		Add(time.Duration(accessTokenData.ExpiresIn)*time.Second)) {
-		c.WriteJson(http.StatusUnauthorized, "需要登陆认证")
-		return
-	}
-
-	c.WriteJson(http.StatusOK, accessTokenData)
+	a, _ := auth.GetCurrentTokenData(c)
+	c.WriteJson(http.StatusOK, a)
 }
 
-// Index index page.
-func Index(c *context.Context) {
-	http.ServeFile(c.Response, c.Request, "./index.html")
+// GetUser get weibo user information.
+func GetUser(c *context.Context) {
+	a, _ := auth.GetCurrentTokenData(c)
+
+	url := fmt.Sprintf("%s/users/show.json?source=%s&uid=%s&access_token=%s",
+		WEIBOSERVER, auth.APPKEY, a.UID, a.AccessToken)
+	resp, err := http.Get(url)
+	if err != nil {
+		c.WriteJson(500, "无法联系新浪服务器")
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	c.WriteBody(200, body)
+}
+
+// GetFriends get friend from weibo
+func GetFriends(c *context.Context) {
+	cursor, _ := strconv.Atoi(c.GetParam("cursor"))
+	a, _ := auth.GetCurrentTokenData(c)
+	url := fmt.Sprintf("%s/friendships/friends.json?source=%s&access_token=%s&uid=%s&cursor=%d",
+		WEIBOSERVER, auth.APPKEY, a.AccessToken, a.UID, cursor)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		c.WriteJson(500, "无法联系新浪服务器")
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	c.WriteBody(200, body)
 }
 
 func main() {
-	context := context.New()
-	router := router.New(context)
-	router.STATIC("/assets/*filepath", "./assets/")
-	router.GET("/", Index)
-	router.GET("/login", Login)
-	router.GET("/auth", auth.Authorize)
-	router.GET("/token", GetToken)
+	c := context.New()
+	c.AddFilter(func(c *context.Context) {
+		url := c.Request.URL.String()
+		if strings.Contains(url, "/api/login") ||
+			strings.Contains(url, "/api/auth") {
+			return
+		}
 
-	fmt.Println(http.ListenAndServe(":8000", router))
+		_, err := auth.GetCurrentTokenData(c)
+		if err != nil {
+			c.WriteJson(http.StatusUnauthorized, "需要登陆认证")
+			return
+		}
+	})
+	router := router.New(c)
+	router.GET("/api/login", Login)
+	router.GET("/api/auth", auth.Authorize)
+	router.GET("/api/token", GetToken)
+	router.GET("/api/user", GetUser)
+	router.GET("/api/friends/:cursor", GetFriends)
+
+	fmt.Println(http.ListenAndServe(":8081", router))
 }
