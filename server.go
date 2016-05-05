@@ -44,15 +44,15 @@ func GetUser(c *context.Context) {
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	c.WriteBody(200, body)
+	c.WriteBody(resp.StatusCode, body)
 }
 
 // GetFriends get friend from weibo
 func GetFriends(c *context.Context) {
 	cursor, _ := strconv.Atoi(c.GetParam("cursor"))
 	a, _ := auth.GetCurrentTokenData(c)
-	url := fmt.Sprintf("%s/friendships/friends.json?source=%s&access_token=%s&uid=%s&cursor=%d",
-		WEIBOSERVER, auth.APPKEY, a.AccessToken, a.UID, cursor)
+	url := fmt.Sprintf("%s/friendships/friends.json?source=%s&count=%d&access_token=%s&uid=%s&cursor=%d",
+		WEIBOSERVER, auth.APPKEY, 30, a.AccessToken, a.UID, cursor)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -61,7 +61,24 @@ func GetFriends(c *context.Context) {
 	}
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	c.WriteBody(200, body)
+	c.WriteBody(resp.StatusCode, body)
+}
+
+// GetFollows get follow from weibo
+func GetFollows(c *context.Context) {
+	cursor, _ := strconv.Atoi(c.GetParam("cursor"))
+	a, _ := auth.GetCurrentTokenData(c)
+	url := fmt.Sprintf("%s/friendships/followers.json?source=%s&count=%d&access_token=%s&uid=%s&cursor=%d",
+		WEIBOSERVER, auth.APPKEY, 30, a.AccessToken, a.UID, cursor)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		c.WriteJson(500, "无法联系新浪服务器")
+		return
+	}
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	c.WriteBody(resp.StatusCode, body)
 }
 
 func main() {
@@ -85,6 +102,7 @@ func main() {
 	router.GET("/api/token", GetToken)
 	router.GET("/api/user", GetUser)
 	router.GET("/api/friends/:cursor", GetFriends)
+	router.GET("/api/follows/:cursor", GetFollows)
 
-	fmt.Println(http.ListenAndServe(":8081", router))
+	fmt.Println(http.ListenAndServe("0.0.0.0:8081", router))
 }

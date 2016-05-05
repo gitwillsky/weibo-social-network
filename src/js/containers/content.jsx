@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import Styles from './content.scss';
-import Friends from '../components/friends';
-import Follows from '../components/follows';
+import FriendList from '../components/friendList';
+import FollowList from '../components/followList';
 
 export default class Content extends Component {
   render() {
@@ -10,10 +10,10 @@ export default class Content extends Component {
         <div className={Styles['box']}>
           <div className={Styles['ex']}>
             {id == 1 &&
-              <Friends />
+              <FollowList />
             }
             {id == 2 &&
-              <Follows />
+              <FriendList />
             }
           </div>
         </div>

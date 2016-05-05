@@ -8,7 +8,7 @@ var config = {
         modulesDirectories: ['node_modules', 'bower_components']
     },
     entry: [
-        'webpack-dev-server/client?http://127.0.0.1:8080', // WebpackDevServer host and port
+        'webpack-dev-server/client?http://0.0.0.0', // WebpackDevServer host and port
         'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
         path.resolve(__dirname, 'src/js/entry.js')
     ],

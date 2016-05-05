@@ -16,14 +16,12 @@ class LeftNav extends Component {
                 </div>
                 <div className={Styles['menuBox']}>
                     <ul>
-                        <li><FontAwesome name="users"/>
-                            <span className={Styles['menuTitle']}
-                              onClick={() => dispatch(selectContent(1))}>我的粉丝</span>
+                        <li onClick={() => dispatch(selectContent(1))}><FontAwesome name="users"/>
+                            <span className={Styles['menuTitle']}>我的粉丝</span>
                             <span className={Styles['number']}>{user.followers_count}</span>
                         </li>
-                        <li><FontAwesome name="heart-o"/>
-                            <span className={Styles['menuTitle']}
-                                onClick={() => dispatch(selectContent(2))}>我的关注</span>
+                        <li onClick={() => dispatch(selectContent(2))}><FontAwesome name="heart-o"/>
+                            <span className={Styles['menuTitle']}>我的关注</span>
                             <span className={Styles['number']}>{user.friends_count}</span>
                         </li>
                     </ul>
